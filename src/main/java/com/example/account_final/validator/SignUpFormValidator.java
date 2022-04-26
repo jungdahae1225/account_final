@@ -1,4 +1,4 @@
-package com.example.validator;
+package com.example.account_final.validator;
 
 import com.example.account_final.AccountRepository;
 import lombok.RequiredArgsConstructor;

@@ -1,9 +1,6 @@
 package com.example.account_final;
 
-import com.example.account_final.event.SignUpConfirmEvent;
 import lombok.AllArgsConstructor;
-import lombok.RequiredArgsConstructor;
-import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.stereotype.Service;
@@ -11,22 +8,24 @@ import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @Transactional
+//@RequiredArgsConstructor
 @AllArgsConstructor
 public class MailService {
-    private AccountRepository accountRepository;
+    //private AccountRepository accountRepository;
+    
+    //mailSender는 AllArgsConstructor가 필요함
     private JavaMailSender mailSender;
-    private final ApplicationEventPublisher publisher;
     private static final String FROM_ADDRESS = "dahaeSpringstudy@gmail.com";
 
-    public void mailSend(MailDto mailDto) {
+    public void mailSend(Account account) {
         SimpleMailMessage message = new SimpleMailMessage();
-        message.setTo(mailDto.getAddress());
+        message.setTo(account.getEmail());
         message.setFrom(MailService.FROM_ADDRESS);
         //message.setSubject(mailDto.getTitle());
         //message.setText(mailDto.getMessage());
 
         message.setSubject("CollaBiz 서비스 사용을 위해 코드를 복사하여 붙여넣어주세요.");
-        message.setText("안녕하세요 CollaBiz입니다");
+        message.setText("안녕하세요 CollaBiz입니다 다음 문자를 홈페이지에 입력해주세요 => " + account.getEmailCheckToken());
         mailSender.send(message);
     }
 
@@ -36,12 +35,8 @@ public class MailService {
         //1.토큰을 만들고 generateEmailCheckToken에서 Account 엔티티의 토큰에 값을 넣어준다.
         account.generateEmailCheckToken();
         //2.이메일을 보낸다
-        sendConfirmEmail(account);
-    }
-    // send emailCheckToken
-    private void sendConfirmEmail(Account account) {
-        //SignUpConfirmEvent의 EEmail을 이벤트에 쓸 객체로 대체해 이메일 전송 이벤트를 처리한다.
-        publisher.publishEvent(new SignUpConfirmEvent(account));
+        //sendConfirmEmail(account);
+        mailSend(account);
     }
 
     //create 220411 dahae
@@ -49,13 +44,4 @@ public class MailService {
     //    return accountRepository.existsByEmail(email);
     //}
 
-    public void CollmailSend(MailDto mailDto) {
-        SimpleMailMessage message = new SimpleMailMessage();
-        message.setTo(mailDto.getAddress());
-        message.setFrom(MailService.FROM_ADDRESS);
-        message.setSubject("CollaBiz 서비스 사용을 위해 코드를 복사하여 붙여넣어주세요.");
-        message.setText("안녕하세요 CollaBiz입니다");
-
-        mailSender.send(message);
-    }
 }
