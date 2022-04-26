@@ -1,6 +1,8 @@
 package com.example.account_final;
 
+import com.example.account_final.dtos.AccountResponseDto;
 import lombok.AllArgsConstructor;
+import org.modelmapper.ModelMapper;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.stereotype.Service;
@@ -11,8 +13,8 @@ import org.springframework.transaction.annotation.Transactional;
 //@RequiredArgsConstructor
 @AllArgsConstructor
 public class MailService {
-    //private AccountRepository accountRepository;
-    
+    private AccountRepository accountRepository;
+    private final ModelMapper modelMapper;
     //mailSender는 AllArgsConstructor가 필요함
     private JavaMailSender mailSender;
     private static final String FROM_ADDRESS = "dahaeSpringstudy@gmail.com";
@@ -44,4 +46,37 @@ public class MailService {
     //    return accountRepository.existsByEmail(email);
     //}
 
+    /**
+     * 이메일 토큰 검증 로직
+     */
+    public AccountResponseDto emailVerification(Account account, String token){
+        if (!account.isValidToken(token)) {
+            return null;
+        }
+
+        completeSignUp(account);
+        return createAccountResponseDto(account);
+    }
+    public void completeSignUp(Account find) {
+        find.completeSignUp();
+    }
+
+    public AccountResponseDto createAccountResponseDto(Account account){
+        AccountResponseDto dto = new AccountResponseDto();
+        dto.setEmail(account.getEmail());
+        dto.setEmailVerified(account.isEmailVerified());
+        return dto;
+    }
+
+    /**
+     * 회원가입 정보 저장
+     */
+    // save account
+    public Account saveNewAccount(AccountDto accountDto) {
+        Account map = modelMapper.map(accountDto, Account.class);
+        //map.setPassword(passwordEncoder.encode(map.getPassword()));
+        //map.generateEmailCheckToken(); 이메일 토큰 처리는 분리해 주었으니 이제 없어도 된다.
+        Account saved = accountRepository.save(map);
+        return saved;
+    }
 }

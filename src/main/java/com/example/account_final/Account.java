@@ -26,7 +26,9 @@ public class Account {
     @Column(nullable = false)
     private String password;
 
-    private String nickname; //유저 회사 이름
+    private String companyName; //유저 회사 이름
+
+    private String companyNumber; //사업자 등록번호
 
     private boolean emailVerified;
 
