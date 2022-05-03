@@ -2,7 +2,7 @@ package com.example.account_final;
 
 import com.example.account_final.dtos.AccountResponseDto;
 import lombok.AllArgsConstructor;
-import org.modelmapper.ModelMapper;
+//import org.modelmapper.ModelMapper;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.stereotype.Service;
@@ -14,7 +14,7 @@ import org.springframework.transaction.annotation.Transactional;
 @AllArgsConstructor
 public class MailService {
     private AccountRepository accountRepository;
-    private final ModelMapper modelMapper;
+    //private final ModelMapper modelMapper;
     //mailSender는 AllArgsConstructor가 필요함
     private JavaMailSender mailSender;
     private static final String FROM_ADDRESS = "dahaeSpringstudy@gmail.com";
@@ -72,11 +72,11 @@ public class MailService {
      * 회원가입 정보 저장
      */
     // save account
-    public Account saveNewAccount(AccountDto accountDto) {
-        Account map = modelMapper.map(accountDto, Account.class);
-        //map.setPassword(passwordEncoder.encode(map.getPassword()));
-        //map.generateEmailCheckToken(); 이메일 토큰 처리는 분리해 주었으니 이제 없어도 된다.
-        Account saved = accountRepository.save(map);
-        return saved;
-    }
+//    public Account saveNewAccount(AccountDto accountDto) {
+//        Account map = modelMapper.map(accountDto, Account.class);
+//        //map.setPassword(passwordEncoder.encode(map.getPassword()));
+//        //map.generateEmailCheckToken(); 이메일 토큰 처리는 분리해 주었으니 이제 없어도 된다.
+//        Account saved = accountRepository.save(map);
+//        return saved;
+//    }
 }
